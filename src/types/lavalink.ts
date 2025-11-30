@@ -446,6 +446,8 @@ export interface ManagerOptions {
   autoPlay?: boolean;
   /** Default search platform */
   defaultSearchPlatform?: 'ytsearch' | 'ytmsearch' | 'scsearch';
+  /** Enable debug logging */
+  debug?: boolean;
 }
 
 export interface DiscordVoicePayload {

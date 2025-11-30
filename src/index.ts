@@ -32,6 +32,7 @@ export { HttpClient } from './utils/http';
 export type { RequestOptions, RequestConfig } from './utils/http';
 export { ExponentialBackoff, sleep, withBackoff } from './utils/backoff';
 export type { BackoffOptions } from './utils/backoff';
+export { AutoPlay } from './utils/autoplay';
 
 // Types
 export type {

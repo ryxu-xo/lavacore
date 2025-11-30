@@ -4,6 +4,7 @@
  */
 
 import { LavalinkEventEmitter } from './events';
+import type { ManagerEvents } from './events';
 import { VoiceForwarder } from './VoiceForwarder';
 import { NodeManager } from '../nodes/NodeManager';
 import { Player } from '../player/Player';
@@ -24,6 +25,7 @@ export class Manager extends LavalinkEventEmitter {
   private players: Map<string, Player> = new Map();
   private clientId: string | null = null;
   private initialized: boolean = false;
+  private debugEnabled: boolean = false;
 
   constructor(options: ManagerOptions) {
     super();
@@ -35,9 +37,21 @@ export class Manager extends LavalinkEventEmitter {
       shards: options.shards ?? 1,
       autoPlay: options.autoPlay ?? true,
       defaultSearchPlatform: options.defaultSearchPlatform ?? 'ytsearch',
+      debug: options.debug ?? false,
     };
 
+    this.debugEnabled = this.options.debug;
     this.nodeManager = NodeManager.getInstance();
+  }
+
+  /**
+   * Override emit to filter debug events based on debug flag
+   */
+  public emit<K extends keyof ManagerEvents>(event: K, ...args: ManagerEvents[K]): boolean {
+    if (event === 'debug' && !this.debugEnabled) {
+      return false;
+    }
+    return super.emit(event, ...args);
   }
 
   /**

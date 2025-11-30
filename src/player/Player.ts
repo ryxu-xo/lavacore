@@ -4,6 +4,7 @@
  */
 
 import { FilterBuilder } from './FilterBuilder';
+import { AutoPlay } from '../utils/autoplay';
 import type { Node } from '../nodes/Node';
 import type { LavalinkEventEmitter } from '../manager/events';
 import type {
@@ -41,6 +42,7 @@ export class Player {
   public previousTracks: Track[] = [];
 
   private filterBuilder: FilterBuilder;
+  private autoPlayEngine: AutoPlay;
   private eventEmitter: LavalinkEventEmitter;
   private autoPlay: boolean;
   // Configuration flags (not currently used directly; kept for future use)
@@ -65,6 +67,7 @@ export class Player {
     this.eventEmitter = eventEmitter;
     this.autoPlay = autoPlay;
     this.filterBuilder = new FilterBuilder(this);
+    this.autoPlayEngine = new AutoPlay();
   }
 
   // ==================== Connection Management ====================
@@ -420,14 +423,37 @@ export class Player {
       }
     }
 
+    const previousTrack = this.track;
     this.track = null;
     this.position = 0;
     this.clearPositionUpdate();
 
-    // Auto-play next track if autoPlay is enabled and reason is 'finished'
-    if (this.autoPlay && reason === 'finished' && this.queue.length > 0) {
+    // Debug logging
+    this.eventEmitter.emit('debug', `Track ended: reason=${reason}, autoPlay=${this.autoPlay}, queueLength=${this.queue.length}`);
+
+    // Auto-play next track from queue if available
+    if (reason === 'finished' && this.queue.length > 0) {
+      this.eventEmitter.emit('debug', 'Playing next track from queue');
       await this.play();
-    } else if (this.queue.length === 0) {
+      return;
+    }
+
+    // If queue is empty and autoPlay is enabled, try to find related tracks
+    if (this.autoPlay && reason === 'finished' && this.queue.length === 0 && previousTrack) {
+      this.eventEmitter.emit('debug', 'Queue empty, attempting AutoPlay...');
+      try {
+        const success = await this.autoPlayEngine.execute(this, previousTrack);
+        if (success) {
+          return; // AutoPlay added a track and started playing
+        }
+        this.eventEmitter.emit('debug', 'AutoPlay failed to find related tracks');
+      } catch (error) {
+        this.eventEmitter.emit('debug', `AutoPlay error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    }
+
+    // Emit queueEnd if nothing to play
+    if (this.queue.length === 0) {
       this.eventEmitter.emit('queueEnd', this);
     }
   }
