@@ -1,277 +1,178 @@
 # Changelog
 
-All notable changes to erela.js will be documented in this file.
+All notable changes to this project will be documented in this file.
 
-## [3.0.0] - 2024
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### 🎉 Major Changes
+## [Unreleased]
 
-#### Lavalink v4 Support
-- **BREAKING:** Updated all REST endpoints to v4 format (`/v4/loadtracks`, `/v4/sessions`, etc.)
-- **BREAKING:** Changed WebSocket endpoint to `/v4/websocket`
-- **NEW:** Session management with resuming support
-- **NEW:** Enhanced player state tracking with ping information
-- **IMPROVED:** Better error handling and response parsing
+## [1.0.0] - 2025-12-01
 
-#### Audio Filters System
-- **NEW:** Comprehensive audio filters support:
-  - Karaoke filter for vocal removal
-  - Timescale for speed/pitch adjustment
-  - Tremolo for amplitude modulation
-  - Vibrato for pitch modulation
-  - Rotation for 8D audio effect
-  - Distortion for audio distortion
-  - Channel Mix for audio channel manipulation
-  - Low Pass for frequency filtering
-- **NEW:** `Filters` class for easy filter management
-- **NEW:** Filter chaining and combination support
+### Added
 
-#### Search Improvements
-- **NEW:** Extended search platform support:
-  - Spotify (with plugin)
-  - Apple Music (with plugin)
-  - Deezer (with plugin)
-  - Yandex Music (with plugin)
-  - Existing: YouTube, YouTube Music, SoundCloud
-- **IMPROVED:** Search result handling for v4 format
-- **IMPROVED:** Better playlist parsing and metadata
-
-#### Track Enhancements
-- **NEW:** `artworkUrl` field for track artwork
-- **NEW:** `isrc` field for International Standard Recording Code
-- **NEW:** `sourceName` field to identify track source
-- **NEW:** `pluginInfo` field for plugin-specific data
-- **NEW:** `userData` field for custom metadata
-- **IMPROVED:** Better thumbnail URL generation
-
-#### Player Improvements
-- **NEW:** `ping` property for voice server latency
-- **NEW:** `uptime` getter for player lifetime
-- **NEW:** `createdAt` and `createdTimestamp` for tracking
-- **NEW:** `restart()` method to restart current track
-- **NEW:** `setNode()` method to change player node
-- **IMPROVED:** Volume handling (0-1000 range maintained)
-- **IMPROVED:** Better state management
+#### Core Features
+- Complete Lavalink v4 support with full REST API and WebSocket protocol implementation
+- TypeScript-first design with comprehensive type definitions
+- Singleton `NodeManager` with intelligent load balancing based on penalty system
+- Factory pattern for `Player` creation through `Manager`
+- Builder pattern for fluent filter configuration via `FilterBuilder`
+- Event-driven architecture with typed `EventEmitter`
 
 #### Node Management
-- **NEW:** `NodeRest` class for v4 REST API operations
-- **NEW:** `sessionId` tracking for connection resuming
-- **NEW:** `getInfo()` method to fetch Lavalink info
-- **NEW:** `getVersion()` method to check Lavalink version
-- **NEW:** `getStats()` method for node statistics
-- **IMPROVED:** Connection handling with session support
-- **IMPROVED:** Better reconnection logic
+- Automatic reconnection with exponential backoff and jitter
+- Session resumption support
+- Health monitoring with heartbeat tracking
+- Configurable reconnection attempts and delays
+- Real-time node statistics tracking
+- Penalty-based load balancing algorithm
+- Pluggable custom penalty calculator
+- Node health checks
+
+#### Player Features
+- Full playback control (play, pause, resume, stop, seek)
+- Volume management (0-100 range with Lavalink conversion)
+- Queue management (add, remove, shuffle, move, clear)
+- Track history tracking (previous tracks)
+- Search integration with multiple platforms
+- Auto-play next track in queue
+- Position tracking with real-time updates
+- Voice state management
+
+#### Filter System
+- Complete v4 filter support:
+  - Volume, Equalizer (15 bands)
+  - Karaoke, Timescale
+  - Tremolo, Vibrato
+  - Rotation (8D audio)
+  - Distortion, Channel Mix
+  - Low Pass
+- Fluent/chainable filter API
+- Pre-built filter presets:
+  - Bass, Treble, Soft, Flat
+  - Electronic, Rock, Classical, Pop
+- Effect presets:
+  - Nightcore, Vaporwave
+  - 8D Audio, Bass Boost (4 levels)
+  - Soft audio
+- Filter state management (get, set, merge, clear)
+
+#### Voice Management
+- `VoiceForwarder` for Discord voice state handling
+- Automatic VOICE_SERVER_UPDATE processing
+- Automatic VOICE_STATE_UPDATE processing
+- Complete voice state aggregation
+- Player movement detection
+- Voice connection tracking
 
 #### Developer Experience
-- **IMPROVED:** TypeScript definitions updated for v4
-- **IMPROVED:** Better JSDoc documentation
-- **NEW:** Comprehensive README with examples
-- **NEW:** Type safety improvements
-- **IMPROVED:** Error messages and debugging
+- Full TypeScript autocomplete support
+- Comprehensive JSDoc documentation
+- Type-safe event handlers
+- Descriptive error messages
+- Debug event emission
+- Extensive examples
 
-### 📦 Dependencies
+#### Utilities
+- `HttpClient` for REST API calls with fetch
+- `ExponentialBackoff` utility with jitter
+- Async sleep helper
+- Retry logic with backoff
 
-#### Updated
-- `@discordjs/collection`: ^1.1.0 → ^2.1.0
-- `@types/node`: v16 → ^20.11.0
-- `@typescript-eslint/eslint-plugin`: ^5.37.0 → ^7.0.0
-- `@typescript-eslint/parser`: ^5.37.0 → ^7.0.0
-- `eslint`: ^8.23.1 → ^8.56.0
-- `tslib`: ^2.4.0 → ^2.6.2
-- `typescript`: ^4.8.3 → ^5.3.3
-- `undici`: ^5.10.0 → ^6.6.0
-- `ws`: ^8.8.1 → ^8.16.0
+#### Documentation
+- Complete README with quick start guide
+- API reference documentation
+- Advanced usage patterns guide
+- Installation and setup guide
+- Contributing guidelines
+- Discord.js integration example
+- Multiple use case examples
 
-#### Requirements
-- **CHANGED:** Node.js minimum version: 16.0.0 → 18.0.0
+#### Configuration
+- TypeScript configuration (strict mode)
+- ESLint configuration with TypeScript rules
+- Package.json with proper dependencies
+- Git ignore patterns
+- MIT License
 
-### 🔧 API Changes
+### Technical Details
 
-#### Manager
-```typescript
-// NEW methods
-manager.getInfo(): Promise<LavalinkInfo>
-manager.getVersion(): Promise<string>
-manager.getStats(): Promise<NodeStats>
+#### Design Patterns
+- **Singleton**: NodeManager for centralized node management
+- **Factory**: Player creation through Manager
+- **Builder**: FilterBuilder for chainable API
+- **Event-Driven**: Comprehensive event system
 
-// CHANGED search platforms
-type SearchPlatform = 
-  | "youtube" 
-  | "youtube music" 
-  | "soundcloud"
-  | "apple music"    // NEW
-  | "spotify"        // NEW
-  | "deezer"         // NEW
-  | "yandex music"   // NEW
-```
+#### Lavalink v4 Compliance
+- Update Player REST endpoint (`/v4/sessions/{sessionId}/players/{guildId}`)
+- WebSocket path (`/v4/websocket`)
+- Required headers (Authorization, User-Id, Client-Name, Resume-Key)
+- All v4 filters supported
+- Complete load result types (track, playlist, search, empty, error)
+- Track encoding/decoding
+- Session management with resumption
 
-#### Player
-```typescript
-// NEW properties
-player.filters: Filters
-player.ping: number
-player.createdTimestamp: number
-player.createdAt: number
+#### Load Balancing Algorithm
+- Player count penalty
+- Playing player count penalty (higher weight)
+- CPU load penalty (normalized by core count)
+- Memory usage penalty (threshold-based)
+- Frame stats penalty (deficit and nulled frames)
+- Pluggable for custom strategies
 
-// NEW methods
-player.restart(): this
-player.setNode(node: string | Node): this
+#### Fault Tolerance
+- Exponential backoff: base delay × 2^attempt
+- Random jitter to prevent thundering herd
+- Configurable maximum attempts
+- Automatic backoff reset on success
+- Connection timeout handling
+- Heartbeat monitoring (30s timeout)
+- Graceful degradation
 
-// NEW getters
-player.uptime: number
+### Performance
+- Efficient WebSocket connection handling
+- Minimal REST API calls
+- Position tracking optimization
+- Connection pooling across nodes
+- Lazy evaluation where appropriate
 
-// CHANGED: Methods now use v4 REST API internally
-player.play()
-player.pause()
-player.seek()
-player.stop()
-player.setVolume()
-```
+### Dependencies
+- `ws` ^8.14.2 - WebSocket client
+- TypeScript ^5.3.2 - Type system
+- @types/node ^20.10.0 - Node.js types
+- @types/ws ^8.5.9 - WebSocket types
 
-#### Node
-```typescript
-// NEW properties
-node.rest: NodeRest
-node.sessionId: string | null
+### Peer Dependencies
+- discord.js ^14.x (optional)
 
-// CHANGED: WebSocket connection
-// Old: ws://host:port
-// New: ws://host:port/v4/websocket
+## [0.1.0] - Initial Development
 
-// CHANGED: REST endpoints
-// Old: /loadtracks
-// New: /v4/loadtracks
-```
-
-#### Filters (NEW)
-```typescript
-const filters = player.filters;
-
-filters.setEqualizer(bands: EqualizerBand[]): this
-filters.setKaraoke(karaoke: KaraokeFilter | null): this
-filters.setTimescale(timescale: TimescaleFilter | null): this
-filters.setTremolo(tremolo: TremoloFilter | null): this
-filters.setVibrato(vibrato: VibratoFilter | null): this
-filters.setRotation(rotation: RotationFilter | null): this
-filters.setDistortion(distortion: DistortionFilter | null): this
-filters.setChannelMix(channelMix: ChannelMixFilter | null): this
-filters.setLowPass(lowPass: LowPassFilter | null): this
-filters.clearFilters(): this
-filters.updateFilters(): this
-filters.get(): FilterOptions
-```
-
-#### Track
-```typescript
-interface Track {
-  // NEW fields
-  artworkUrl: string | null
-  isrc: string | null
-  sourceName: string
-  pluginInfo?: Record<string, unknown>
-  userData?: Record<string, unknown>
-  
-  // Existing fields remain unchanged
-  track: string
-  title: string
-  // ...
-}
-```
-
-### 🐛 Bug Fixes
-- Fixed equalizer band persistence
-- Fixed queue state synchronization
-- Improved voice state update handling
-- Fixed memory leaks in long-running players
-- Better handling of node disconnections
-
-### ⚠️ Breaking Changes
-
-1. **Lavalink v4 Required**
-   - Erela.js v3 requires Lavalink v4.0.0 or higher
-   - v3 Lavalink nodes are not compatible (use erela.js v2.x for v3 nodes)
-
-2. **Node.js 18+ Required**
-   - Minimum Node.js version increased from 16 to 18
-
-3. **LoadType Changes**
-   ```typescript
-   // Old (v3 Lavalink)
-   "TRACK_LOADED" | "PLAYLIST_LOADED" | "SEARCH_RESULT" | "LOAD_FAILED" | "NO_MATCHES"
-   
-   // New (v4 Lavalink)
-   "track" | "playlist" | "search" | "empty" | "error"
-   
-   // Note: Old types still supported for backward compatibility
-   ```
-
-4. **REST API Changes**
-   - All internal REST calls updated to v4 endpoints
-   - If you were directly accessing node REST methods, update your code
-
-5. **Player Updates**
-   - Player methods now use REST API instead of WebSocket for operations
-   - This provides better reliability and state consistency
-
-### 🔄 Migration Guide
-
-#### From v2.x to v3.0.0
-
-1. **Update Lavalink to v4**
-   ```bash
-   # Download Lavalink v4.0.0 or higher
-   java -jar Lavalink.jar
-   ```
-
-2. **Update package**
-   ```bash
-   npm install erela.js@latest
-   ```
-
-3. **Update Node.js**
-   ```bash
-   # Ensure Node.js 18 or higher
-   node --version
-   ```
-
-4. **Update your code (if using custom implementations)**
-   ```typescript
-   // Old - Direct WebSocket operations
-   node.send({ op: "play", guildId, track });
-   
-   // New - Use REST API
-   await node.rest.updatePlayer({ 
-     guildId, 
-     data: { encodedTrack: track } 
-   });
-   ```
-
-5. **Update LoadType checks**
-   ```typescript
-   // Old
-   if (result.loadType === "SEARCH_RESULT") { ... }
-   
-   // New (both work, but prefer new format)
-   if (result.loadType === "search") { ... }
-   ```
-
-### 📝 Notes
-
-- Backward compatibility maintained where possible
-- Legacy v3 LoadType enums still work but are deprecated
-- Old equalizer methods (`setEQ()`, `clearEQ()`) deprecated in favor of `filters`
-- All new features require Lavalink v4 with appropriate plugins
-
-### 🎯 Roadmap
-
-- [ ] LavaSrc plugin integration examples
-- [ ] Advanced queue management features
-- [ ] Built-in lyrics fetching
-- [ ] Audio visualization support
-- [ ] Enhanced plugin system
-- [ ] WebSocket event filtering
-- [ ] Better TypeScript strict mode support
+### Added
+- Initial project structure
+- Basic TypeScript setup
+- Core interfaces and types
 
 ---
 
-[3.0.0]: https://github.com/MenuDocs/erela.js/releases/tag/v3.0.0
+## Version Guidelines
+
+### Major Version (X.0.0)
+- Breaking API changes
+- Major architectural changes
+- Lavalink protocol version changes
+
+### Minor Version (0.X.0)
+- New features (backward compatible)
+- New filter types
+- New convenience methods
+- Performance improvements
+
+### Patch Version (0.0.X)
+- Bug fixes
+- Documentation updates
+- Minor improvements
+- Dependency updates
+
+[Unreleased]: https://github.com/yourusername/lava.ts/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/yourusername/lava.ts/releases/tag/v1.0.0
+[0.1.0]: https://github.com/yourusername/lava.ts/releases/tag/v0.1.0
