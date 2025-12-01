@@ -3,7 +3,7 @@
 > A professional-grade, TypeScript-first Lavalink v4 client library for Node.js
 
 [![npm version](https://img.shields.io/npm/v/lava.ts.svg)](https://www.npmjs.com/package/lava.ts)
-[![License](https://img.shields.io/npm/l/lava.ts.svg)](LICENSE)
+[![License](https://img.shields.io/npm/l/lava.ts.svg)](https://github.com/ryxu-xo/lava.ts/blob/main/LICENSE)
 
 ## Features
 
@@ -223,3 +223,4 @@ Contributions are welcome! Please read our contributing guidelines and code of c
 - [Documentation](https://github.com/ryxu-xo/lava.ts/wiki)
 - [Issues](https://github.com/ryxu-xo/lava.ts/issues)
 - [Discord Server](https://discord.gg/your-invite)
+
