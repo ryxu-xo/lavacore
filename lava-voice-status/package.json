@@ -1,0 +1,20 @@
+{
+  "name": "lava-voice-status",
+  "version": "1.0.0",
+  "description": "lava.ts plugin to update Discord voice channel status and user activity.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "author": "ryxu-xo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ryxu-xo/lava-plugin-voice-status"
+  },
+  "bugs": {
+    "url": "https://github.com/ryxu-xo/lava-plugin-voice-status/issues"
+  },
+  "homepage": "https://github.com/ryxu-xo/lava-plugin-voice-status",
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}

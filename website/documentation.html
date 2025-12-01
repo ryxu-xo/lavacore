@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lava.ts — Documentation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ["Inter","system-ui","sans-serif"], mono: ["JetBrains Mono","monospace"] },
+          colors: { brand: { 600: '#4d5bf6', 500: '#6b7dff' } }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root { color-scheme: dark; }
+    html { scroll-behavior: smooth; }
+    .glass { backdrop-filter: saturate(120%) blur(10px); background: rgba(20, 24, 38, 0.6); border: 1px solid rgba(255,255,255,0.06); }
+    .active { color: #6b7dff; }
+  </style>
+</head>
+<body class="bg-[#0b0f1a] text-white antialiased">
+  <header class="sticky top-0 z-50">
+    <div class="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between glass">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-brand-500 rounded-md"></div>
+        <span class="font-semibold">lava.ts Docs</span>
+      </div>
+      <nav class="flex items-center gap-6 text-sm">
+        <a href="landing.html" class="opacity-80 hover:opacity-100 transition">Home</a>
+        <a href="https://github.com/ryxu-xo/lava.ts" target="_blank" class="opacity-80 hover:opacity-100 transition">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-6 py-10 grid grid-cols-1 md:grid-cols-[240px_1fr] gap-6">
+    <!-- Sidebar -->
+    <aside class="glass rounded-xl p-4 h-max sticky top-24">
+      <div class="text-xs uppercase opacity-60 mb-3">On this page</div>
+      <nav class="space-y-2 text-sm" id="toc">
+        <a href="#intro" class="block opacity-80 hover:opacity-100">Introduction</a>
+        <a href="#install" class="block opacity-80 hover:opacity-100">Install & Setup</a>
+        <a href="#manager" class="block opacity-80 hover:opacity-100">Manager</a>
+        <a href="#player" class="block opacity-80 hover:opacity-100">Player</a>
+        <a href="#autoplay" class="block opacity-80 hover:opacity-100">AutoPlay</a>
+        <a href="#events" class="block opacity-80 hover:opacity-100">Events</a>
+        <a href="#discordjs" class="block opacity-80 hover:opacity-100">Discord.js Example</a>
+        <a href="#deploy" class="block opacity-80 hover:opacity-100">Deploy (Vercel)</a>
+        <a href="#links" class="block opacity-80 hover:opacity-100">Links</a>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <section class="space-y-10">
+      <article id="intro" class="glass rounded-xl p-6">
+        <h1 class="text-2xl font-bold">Introduction</h1>
+        <p class="mt-3 opacity-80">lava.ts is a professional TypeScript client for Lavalink v4 featuring strict typing, resilient architecture, intelligent AutoPlay, and a developer-first API. It includes a robust Manager/Player system, filter builder, voice forwarding, and comprehensive events.
+        </p>
+      </article>
+
+      <article id="install" class="glass rounded-xl p-6">
+        <h2 class="text-xl font-semibold">Install & Setup</h2>
+        <p class="mt-2 opacity-80">Install via npm:</p>
+        <pre class="mt-3 p-3 rounded-lg bg-black/50 border border-white/10 text-sm font-mono">npm i lava.ts</pre>
+        <p class="mt-4 opacity-80">Basic initialization:</p>
+        <pre class="mt-2 p-3 rounded-lg bg-black/50 border border-white/10 text-sm font-mono overflow-x-auto"><code>import { Manager } from 'lava.ts'
+const manager = new Manager({
+  nodes: [{ host: 'localhost', port: 2333, password: 'youshallnotpass' }],
+  debug: true,
+  autoPlay: true,
+})
+manager.on('nodeReady', (n) => console.log('Connected:', n.id))
+manager.init()</code></pre>
+      </article>
+
+      <article id="manager" class="glass rounded-xl p-6">
+        <h2 class="text-xl font-semibold">Manager API</h2>
+        <p class="mt-2 opacity-80">Orchestrates node connections, player lifecycle, and voice forwarding.</p>
+        <div class="mt-4 grid md:grid-cols-2 gap-4">
+          <div>
+            <h3 class="font-semibold">Constructor</h3>
+            <pre class="mt-2 code"><code>new Manager(options: ManagerOptions)</code></pre>
+            <h4 class="mt-3 text-sm font-semibold opacity-80">ManagerOptions</h4>
+            <ul class="mt-2 list-disc list-inside opacity-80">
+              <li><code>nodes: NodeOptions[]</code> — Lavalink nodes to connect</li>
+              <li><code>debug?: boolean</code> — emit <code>debug</code> events</li>
+              <li><code>autoPlay?: boolean</code> — enable AutoPlay engine</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-semibold">Core Methods</h3>
+            <ul class="mt-2 list-disc list-inside opacity-80">
+              <li><code>init(): void</code> — connect to all nodes</li>
+              <li><code>create(guildId, voiceChannelId, textChannelId): Player</code></li>
+              <li><code>getPlayer(guildId): Player | undefined</code></li>
+              <li><code>destroyPlayer(guildId): void</code></li>
+              <li><code>sendRawPacket(packet): void</code> — voice forwarding</li>
+              <li><code>isInitialized(): boolean</code></li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-4">
+          <h3 class="font-semibold">Events</h3>
+          <ul class="mt-2 list-disc list-inside opacity-80">
+            <li><code>nodeReady</code>, <code>nodeDisconnected</code>, <code>nodeError</code></li>
+            <li><code>playerCreate</code>, <code>playerDestroy</code></li>
+            <li><code>debug</code> (only if <code>debug</code> is true)</li>
+          </ul>
+        </div>
+      </article>
+
+      <article id="player" class="glass rounded-xl p-6">
+        <h2 class="text-xl font-semibold">Player API</h2>
+        <p class="mt-2 opacity-80">Playback control, queue management, and filter application.</p>
+        <div class="mt-3 grid md:grid-cols-2 gap-4">
+          <div>
+            <h3 class="font-semibold">Playback</h3>
+            <ul class="mt-2 list-disc list-inside opacity-80">
+              <li><code>search(query): Track[]</code></li>
+              <li><code>play(track?)</code>, <code>pause(state)</code>, <code>stop()</code></li>
+              <li><code>setVolume(number)</code>, <code>seek(ms)</code></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-semibold">Queue</h3>
+            <ul class="mt-2 list-disc list-inside opacity-80">
+              <li><code>add(track|track[])</code>, <code>remove(index)</code></li>
+              <li><code>clear()</code>, <code>shuffle()</code></li>
+              <li><code>skip()</code>, <code>previous()</code></li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-4">
+          <h3 class="font-semibold">Events</h3>
+          <ul class="mt-2 list-disc list-inside opacity-80">
+            <li><code>trackStart</code>, <code>trackEnd</code>, <code>queueEnd</code>, <code>error</code></li>
+          </ul>
+        </div>
+      </article>
+
+      <article id="autoplay" class="glass rounded-xl p-6">
+        <h2 class="text-xl font-semibold">AutoPlay</h2>
+        <p class="mt-2 opacity-80">Source-aware recommendations. When a track ends and the queue is empty, AutoPlay pulls similar content from YouTube RD, SoundCloud, or converts Spotify tracks to YouTube results. Duplicates are avoided via a short history.</p>
+        <pre class="mt-3 p-3 rounded-lg bg-black/50 border border-white/10 text-sm font-mono overflow-x-auto"><code>// Triggered automatically after queue end
+player.on('queueEnd', async () => {
+  // AutoPlay will attempt a recommendation and queue it
+})</code></pre>
+      </article>
+
+      <article id="events" class="glass rounded-xl p-6">
+        <h2 class="text-xl font-semibold">Events Reference</h2>
+        <div class="mt-3 grid md:grid-cols-2 gap-4">
+          <div>
+            <h3 class="font-semibold">ManagerEvents</h3>
+            <ul class="mt-2 list-disc list-inside opacity-80">
+              <li><code>nodeReady(node)</code></li>
+              <li><code>nodeDisconnected(node, reason)</code></li>
+              <li><code>playerCreate(player)</code>, <code>playerDestroy(player)</code></li>
+              <li><code>debug(payload)</code></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-semibold">PlayerEvents</h3>
+            <ul class="mt-2 list-disc list-inside opacity-80">
+              <li><code>trackStart(track)</code>, <code>trackEnd(track, reason)</code></li>
+              <li><code>queueEnd()</code></li>
+              <li><code>error(err)</code></li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article id="discordjs" class="glass rounded-xl p-6">
+        <h2 class="text-xl font-semibold">Discord.js Example</h2>
+        <p class="mt-2 opacity-80">A plain JS example is included. Ensure you register Manager listeners before <code>init()</code> and guard raw packet forwarding with <code>manager.isInitialized()</code>.</p>
+        <pre class="mt-3 p-3 rounded-lg bg-black/50 border border-white/10 text-sm font-mono overflow-x-auto"><code>// Forward raw voice packets
+client.on('raw', (packet) => {
+  if (!manager.isInitialized()) return;
+  manager.sendRawPacket(packet);
+});</code></pre>
+        <p class="mt-3 opacity-80">See full examples in <a class="underline" href="examples.html">Examples</a>.</p>
+      </article>
+
+      <article id="deploy" class="glass rounded-xl p-6">
+        <h2 class="text-xl font-semibold">Deploy (Vercel)</h2>
+        <p class="mt-2 opacity-80">This site is static and can be hosted on Vercel. Place <code>landing.html</code> as your index and include <code>documentation.html</code>. For the Node library, deploy your bot/app separately as a server process; Vercel is ideal for docs & marketing pages.</p>
+        <ul class="mt-3 list-disc list-inside opacity-80">
+          <li>Project: Framework = "Other", Output Directory = <code>website</code></li>
+          <li>Ensure assets are relative paths; no server-side requirements.</li>
+        </ul>
+      </article>
+
+      <article id="links" class="glass rounded-xl p-6">
+        <h2 class="text-xl font-semibold">Links</h2>
+        <ul class="mt-3 list-disc list-inside opacity-80">
+          <li><a class="underline" href="https://github.com/ryxu-xo/lava.ts" target="_blank">GitHub Repository</a></li>
+          <li><a class="underline" href="landing.html">Landing Page</a></li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
+  <footer class="mx-auto max-w-7xl px-6 pb-10">
+    <div class="flex items-center justify-between opacity-70 text-sm">
+      <div>© 2025 lava.ts • Documentation</div>
+      <div class="flex gap-4">
+        <a href="landing.html" class="hover:opacity-100">Home</a>
+        <a href="#intro" class="hover:opacity-100">Top</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Active section highlighting
+    const tocLinks = Array.from(document.querySelectorAll('#toc a'));
+    const sections = tocLinks.map(a => document.querySelector(a.getAttribute('href')));
+    const onScroll = () => {
+      let index = sections.findIndex(sec => sec.getBoundingClientRect().top > 100) - 1;
+      if (index < 0) index = sections.length - 1;
+      tocLinks.forEach((a,i) => a.classList.toggle('active', i === index));
+    };
+    document.addEventListener('scroll', onScroll);
+    window.addEventListener('load', onScroll);
+  </script>
+</body>
+</html>

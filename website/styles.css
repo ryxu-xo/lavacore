@@ -1,0 +1,7 @@
+/* Shared styles for lava.ts site */
+:root { color-scheme: dark; }
+.code { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; display: block; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); }
+.section-title { display:flex; align-items:center; gap:8px; }
+pre.code { overflow-x: auto; }
+code { font-family: "JetBrains Mono", monospace; }

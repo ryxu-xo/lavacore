@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>lava.ts — Lavalink v4 Client</title>
+    <meta name="description" content="Professional TypeScript Lavalink v4 client with strict typing, resilient architecture, intelligent AutoPlay, and polished developer experience." />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ["Inter", "system-ui", "sans-serif"],
+                        mono: ["JetBrains Mono", "monospace"],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f7ff',
+                            100: '#eaefff',
+                            200: '#d6deff',
+                            300: '#b9c4ff',
+                            400: '#93a2ff',
+                            500: '#6b7dff',
+                            600: '#4d5bf6',
+                            700: '#3b45d1',
+                            800: '#2f38a8',
+                            900: '#262f85',
+                        }
+                    },
+                    boxShadow: {
+                        glow: '0 0 30px rgba(107, 125, 255, 0.25)',
+                        soft: '0 10px 40px rgba(0,0,0,0.3)'
+                    },
+                    keyframes: {
+                        float: { '0%, 100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-8px)' } },
+                        fadeInUp: { '0%': { opacity: 0, transform: 'translateY(10px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+                        shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+                    },
+                    animation: {
+                        float: 'float 6s ease-in-out infinite',
+                        fadeInUp: 'fadeInUp 0.6s ease forwards',
+                        shimmer: 'shimmer 3s linear infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root { color-scheme: dark; }
+        html { scroll-behavior: smooth; }
+        .glass { backdrop-filter: saturate(120%) blur(10px); background: rgba(20, 24, 38, 0.58); border: 1px solid rgba(255,255,255,0.06); }
+        .grid-animate { background-size: 48px 48px; background-image: linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px); }
+        .reveal { opacity: 1 !important; transform: translateY(0) !important; }
+        .tilt:hover { transform: translateY(-2px) rotateX(1deg) rotateY(-1deg); }
+        /* Anchor offset for sticky header */
+        section[id] { scroll-margin-top: 96px; }
+    </style>
+</head>
+<body class="bg-[#0b0f1a] text-white antialiased">
+    <!-- Animated Background -->
+    <div class="fixed inset-0 -z-10">
+        <div class="absolute inset-0 grid-animate"></div>
+        <!-- Gradient blobs with float animation -->
+        <div class="absolute -top-32 -left-32 w-[40rem] h-[40rem] rounded-full blur-[120px] opacity-30 animate-float" style="background: radial-gradient(circle at 30% 30%, #6b7dff, transparent 60%);"></div>
+        <div class="absolute -bottom-32 -right-32 w-[40rem] h-[40rem] rounded-full blur-[120px] opacity-30 animate-float" style="animation-delay: 1s; background: radial-gradient(circle at 70% 70%, #93a2ff, transparent 60%);"></div>
+    </div>
+
+    <!-- Navbar -->
+    <header class="sticky top-0 z-50">
+        <div class="mx-auto max-w-6xl px-6 py-3 flex items-center justify-between glass">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-brand-500 rounded-md shadow-glow animate-float"></div>
+                <span class="font-semibold">lava.ts</span>
+            </div>
+            <nav class="flex items-center gap-6 text-sm">
+                <a href="#features" class="opacity-80 hover:opacity-100 transition">Features</a>
+                <a href="#showcase" class="opacity-80 hover:opacity-100 transition">Showcase</a>
+                <a href="examples.html" class="opacity-80 hover:opacity-100 transition">Examples</a>
+                <a href="#get-started" class="opacity-80 hover:opacity-100 transition">Get Started</a>
+                <a href="documentation.html" class="opacity-80 hover:opacity-100 transition">Docs</a>
+                <a href="https://github.com/ryxu-xo/lava.ts" target="_blank" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M12 .5C5.73.5.5 5.73.5 12a11.5 11.5 0 008.07 10.95c.59.11.81-.26.81-.57v-2c-3.29.72-3.98-1.58-3.98-1.58-.54-1.37-1.33-1.74-1.33-1.74-1.09-.75.08-.74.08-.74 1.2.08 1.83 1.23 1.83 1.23 1.07 1.83 2.8 1.3 3.48.99.11-.78.42-1.3.76-1.6-2.63-.3-5.4-1.32-5.4-5.9 0-1.3.47-2.37 1.24-3.21-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23.96-.27 1.98-.4 3-.4s2.04.14 3 .4c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.21 0 4.59-2.78 5.6-5.43 5.89.43.37.82 1.1.82 2.22v3.29c0 .32.21.7.82.58A11.5 11.5 0 0023.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+                    GitHub
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="mx-auto max-w-6xl px-6 pt-16 pb-20 relative">
+        <div class="absolute -z-10 -top-24 left-10 w-64 h-64 rounded-full blur-[80px]" style="background: radial-gradient(circle at 50% 50%, #6b7dff, transparent 60%);"></div>
+        <div class="absolute -z-10 -bottom-10 right-20 w-64 h-64 rounded-full blur-[80px]" style="background: radial-gradient(circle at 50% 50%, #93a2ff, transparent 60%);"></div>
+        <div class="grid md:grid-cols-2 gap-10 items-center">
+            <div class="opacity-0 translate-y-2 animate-fadeInUp">
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">Professional Lavalink v4 Client for TypeScript</h1>
+                <p class="mt-4 text-lg opacity-80">Strictly typed, resilient, and developer-first. Build audio bots and apps with confidence using lava.ts — complete Manager, Player, filters, events, and intelligent AutoPlay.</p>
+                <div class="mt-8 flex flex-wrap gap-3">
+                    <a href="#get-started" class="px-4 py-2 rounded-md bg-brand-600 hover:bg-brand-500 transition shadow-glow">Get Started</a>
+                    <a href="#showcase" class="px-4 py-2 rounded-md bg-white/10 hover:bg-white/20 transition">See Examples</a>
+                </div>
+                <div class="mt-6 text-sm opacity-75">Install:</div>
+                <pre class="mt-2 p-3 rounded-lg bg-black/50 border border-white/10 text-sm font-mono">npm i lava.ts</pre>
+            </div>
+            <div class="glass rounded-xl p-6 border border-white/10 shadow-soft tilt opacity-0 translate-y-2 animate-fadeInUp overflow-hidden" style="animation-delay: .1s">
+                <div class="text-xs uppercase tracking-wide opacity-60 mb-3">Code Snapshot</div>
+                <pre class="text-sm font-mono leading-relaxed overflow-x-auto bg-gradient-to-r from-white/5 via-white/10 to-white/5 bg-[length:200%_100%] animate-shimmer p-3 rounded-md"><code>// Manager initialization
+import { Manager } from 'lava.ts'
+const manager = new Manager({
+    nodes: [{ host: 'localhost', port: 2333, password: 'youshallnotpass' }],
+    debug: true,
+    autoPlay: true,
+})
+
+manager.on('nodeReady', (n) => console.log('Connected:', n.id))
+manager.init()
+
+// Player usage
+const player = manager.create('guildId', 'voiceChannelId', 'textChannelId')
+await player.search('never gonna give you up')
+player.play()
+</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="mx-auto max-w-6xl px-6 py-14">
+        <h2 class="text-2xl font-bold mb-6">Features</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="glass rounded-xl p-5 border border-white/10 transition transform hover:-translate-y-1 hover:shadow-glow opacity-0 translate-y-2 overflow-hidden" data-reveal>
+                <div class="text-brand-400 font-semibold">TypeScript-first</div>
+                <p class="mt-2 opacity-80">Strict typings for Manager, Player, events, filters, and Lavalink v4 structures.</p>
+            </div>
+            <div class="glass rounded-xl p-5 border border-white/10 transition transform hover:-translate-y-1 hover:shadow-glow opacity-0 translate-y-2 overflow-hidden" data-reveal>
+                <div class="text-brand-400 font-semibold">Resilient by design</div>
+                <p class="mt-2 opacity-80">Exponential reconnection, heartbeats, and robust error handling.</p>
+            </div>
+            <div class="glass rounded-xl p-5 border border-white/10 transition transform hover:-translate-y-1 hover:shadow-glow opacity-0 translate-y-2 overflow-hidden" data-reveal>
+                <div class="text-brand-400 font-semibold">Smart AutoPlay</div>
+                <p class="mt-2 opacity-80">Source-aware recommendations from YouTube RD, SoundCloud, and Spotify.</p>
+            </div>
+            <div class="glass rounded-xl p-5 border border-white/10 transition transform hover:-translate-y-1 hover:shadow-glow opacity-0 translate-y-2 overflow-hidden" data-reveal>
+                <div class="text-brand-400 font-semibold">Discord.js example</div>
+                <p class="mt-2 opacity-80">Plain JS demo ready to run; no TS required.</p>
+            </div>
+            <div class="glass rounded-xl p-5 border border-white/10 transition transform hover:-translate-y-1 hover:shadow-glow opacity-0 translate-y-2 overflow-hidden" data-reveal>
+                <div class="text-brand-400 font-semibold">Filter Builder</div>
+                <p class="mt-2 opacity-80">Easily compose filters like timescale, karaoke, and more.</p>
+            </div>
+            <div class="glass rounded-xl p-5 border border-white/10 transition transform hover:-translate-y-1 hover:shadow-glow opacity-0 translate-y-2" data-reveal>
+                <div class="text-brand-400 font-semibold">Events + Debug</div>
+                <p class="mt-2 opacity-80">Rich events with optional debug mode for deep visibility.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Showcase -->
+    <section id="showcase" class="mx-auto max-w-6xl px-6 py-14">
+        <div class="grid md:grid-cols-2 gap-6 items-center">
+            <div class="glass rounded-xl p-5 border border-white/10 opacity-0 translate-y-2 overflow-hidden" data-reveal>
+                <h3 class="font-semibold">Player Controls</h3>
+                <p class="mt-2 opacity-80">Queue management, skip, previous, shuffle, and clear operations built-in.</p>
+            </div>
+            <div class="glass rounded-xl p-5 border border-white/10 opacity-0 translate-y-2 overflow-hidden" data-reveal>
+                <h3 class="font-semibold">Voice Forwarding</h3>
+                <p class="mt-2 opacity-80">Flexible raw voice state forwarding compatible with Discord.js v14.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="get-started" class="mx-auto max-w-6xl px-6 py-14">
+        <div class="glass rounded-xl p-6 border border-white/10 text-center opacity-0 translate-y-2 overflow-hidden" data-reveal>
+            <h3 class="text-xl font-semibold">Ready to build?</h3>
+            <p class="mt-2 opacity-80">Install lava.ts and start shipping audio features fast.</p>
+            <div class="mt-4">
+                <pre class="inline-block p-3 rounded-lg bg-black/50 border border-white/10 text-sm font-mono">npm i lava.ts</pre>
+            </div>
+            <div class="mt-6 flex justify-center gap-3">
+                <a href="documentation.html" class="px-4 py-2 rounded-md bg-white/10 hover:bg-white/20 transition">Read the Docs</a>
+                <a href="https://github.com/ryxu-xo/lava.ts" target="_blank" class="px-4 py-2 rounded-md bg-brand-600 hover:bg-brand-500 transition shadow-glow">Star on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mx-auto max-w-6xl px-6 pb-8">
+        <div class="flex items-center justify-between opacity-70 text-sm">
+            <div>© 2025 lava.ts • Built for devs</div>
+            <div class="flex gap-4">
+                <a href="#features" class="hover:opacity-100">Features</a>
+                <a href="#get-started" class="hover:opacity-100">Get Started</a>
+                <a href="examples.html" class="hover:opacity-100">Examples</a>
+                <a href="documentation.html" class="hover:opacity-100">Docs</a>
+                <a href="https://github.com/ryxu-xo/lava.ts" target="_blank" class="hover:opacity-100">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Effects & interactions -->
+    <script>
+        // Scroll reveal for elements with data-reveal
+        const revealEls = () => {
+            document.querySelectorAll('[data-reveal]').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 80) {
+                    el.classList.add('reveal');
+                    el.style.transition = 'opacity .6s ease, transform .6s ease';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }
+            });
+        };
+        window.addEventListener('scroll', revealEls);
+        window.addEventListener('load', revealEls);
+
+        // Subtle parallax on hero code card
+        const tilt = document.querySelector('.tilt');
+        if (tilt) {
+            tilt.addEventListener('mousemove', (e) => {
+                const rect = tilt.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const rotateX = ((y / rect.height) - 0.5) * -4;
+                const rotateY = ((x / rect.width) - 0.5) * 4;
+                tilt.style.transform = `perspective(700px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            tilt.addEventListener('mouseleave', () => {
+                tilt.style.transform = '';
+            });
+        }
+    </script>
+</body>
+</html>
+                <div class="glass rounded-2xl p-8 hover:glow transition duration-300 group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-indigo to-cyan rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Enterprise Stability</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Smart load balancing with penalty-based node selection. Automatic reconnection with exponential backoff. Built for 99.9% uptime.
+                    </p>
+                    <ul class="mt-4 space-y-2 text-sm text-gray-400">
+                        <li class="flex items-center">
+                            <svg class="w-4 h-4 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Multi-node load balancing
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-4 h-4 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Automatic failover
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-4 h-4 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Health monitoring
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass rounded-2xl p-8 hover:glow transition duration-300 group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-cyan to-indigo rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Modern Developer API</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Fluent, chainable methods with full TypeScript support. IntelliSense-powered development with zero configuration.
+                    </p>
+                    <ul class="mt-4 space-y-2 text-sm text-gray-400">
+                        <li class="flex items-center">
+                            <svg class="w-4 h-4 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            100% TypeScript
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-4 h-4 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Chainable methods
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-4 h-4 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Event-driven
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass rounded-2xl p-8 hover:glow transition duration-300 group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-indigo to-cyan rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Full Lavalink v4 Support</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Native v4 REST API integration. All filters supported. Queue management, AutoPlay, and intelligent track recommendations.
+                    </p>
+                    <ul class="mt-4 space-y-2 text-sm text-gray-400">
+                        <li class="flex items-center">
+                            <svg class="w-4 h-4 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            10+ audio filters
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-4 h-4 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Intelligent AutoPlay
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-4 h-4 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Queue management
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Showcase -->
+    <section class="relative py-24 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Left: Text -->
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                        Simple. <span class="gradient-text">Powerful.</span> <br/>Ready in seconds.
+                    </h2>
+                    <p class="text-xl text-gray-400 mb-8 leading-relaxed">
+                        Write less code, do more. Our fluent API makes complex audio operations feel natural.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-6 h-6 text-green-400 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <div>
+                                <h4 class="font-semibold text-lg">Chain Operations</h4>
+                                <p class="text-gray-400">Combine filters, volume, and playback controls in one line</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-6 h-6 text-green-400 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <div>
+                                <h4 class="font-semibold text-lg">Auto-Complete Everything</h4>
+                                <p class="text-gray-400">Full TypeScript definitions for every method and event</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-6 h-6 text-green-400 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <div>
+                                <h4 class="font-semibold text-lg">Zero Configuration</h4>
+                                <p class="text-gray-400">Sensible defaults get you running in under 60 seconds</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Code Window -->
+                <div class="code-window rounded-2xl overflow-hidden">
+                    <!-- Window Header -->
+                    <div class="bg-gray-900 px-4 py-3 flex items-center space-x-2 border-b border-gray-800">
+                        <div class="flex space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <span class="text-gray-400 text-sm ml-4 font-mono">player.ts</span>
+                    </div>
+                    <!-- Code Content -->
+                    <div class="p-6 overflow-x-auto">
+<pre class="text-sm leading-relaxed"><span class="syntax-comment">// Create and connect a player</span>
+<span class="syntax-keyword">const</span> player = manager.<span class="syntax-function">create</span>({
+  guildId: <span class="syntax-string">'guild-id'</span>,
+  voiceChannelId: <span class="syntax-string">'voice-channel-id'</span>
+});
+
+<span class="syntax-keyword">await</span> player.<span class="syntax-function">connect</span>();
+
+<span class="syntax-comment">// Search and play a track</span>
+<span class="syntax-keyword">const</span> result = <span class="syntax-keyword">await</span> player.<span class="syntax-function">search</span>(<span class="syntax-string">'NIKI - Backburner'</span>);
+<span class="syntax-keyword">await</span> player.<span class="syntax-function">play</span>(result.data);
+
+<span class="syntax-comment">// Apply filters with fluent API 🎨</span>
+<span class="syntax-keyword">await</span> player.<span class="syntax-function">filters</span>()
+  .<span class="syntax-function">bassboost</span>(<span class="syntax-string">'medium'</span>)
+  .<span class="syntax-function">nightcore</span>()
+  .<span class="syntax-function">apply</span>();
+
+<span class="syntax-comment">// AutoPlay handles the rest ✨</span>
+manager.<span class="syntax-function">on</span>(<span class="syntax-string">'queueEnd'</span>, (player) => {
+  <span class="syntax-comment">// Intelligent recommendations continue playing</span>
+});</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Presets Showcase -->
+    <section class="relative py-24 px-6 bg-gradient-to-b from-transparent to-space-light">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-6">
+                13 Built-in <span class="gradient-text">Audio Presets</span>
+            </h2>
+            <p class="text-xl text-gray-400 text-center mb-16 max-w-2xl mx-auto">
+                From Nightcore to Vaporwave, apply professional audio effects with a single method call
+            </p>
+            
+            <div class="grid md:grid-cols-4 gap-4">
+                <div class="glass rounded-xl p-4 text-center hover:glow transition cursor-pointer">
+                    <div class="text-2xl mb-2">🎵</div>
+                    <div class="font-semibold">Nightcore</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center hover:glow transition cursor-pointer">
+                    <div class="text-2xl mb-2">🌊</div>
+                    <div class="font-semibold">Vaporwave</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center hover:glow transition cursor-pointer">
+                    <div class="text-2xl mb-2">🎧</div>
+                    <div class="font-semibold">8D Audio</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center hover:glow transition cursor-pointer">
+                    <div class="text-2xl mb-2">🔊</div>
+                    <div class="font-semibold">Bassboost</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center hover:glow transition cursor-pointer">
+                    <div class="text-2xl mb-2">🎸</div>
+                    <div class="font-semibold">Rock</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center hover:glow transition cursor-pointer">
+                    <div class="text-2xl mb-2">🎻</div>
+                    <div class="font-semibold">Classical</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center hover:glow transition cursor-pointer">
+                    <div class="text-2xl mb-2">🎤</div>
+                    <div class="font-semibold">Pop</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center hover:glow transition cursor-pointer">
+                    <div class="text-2xl mb-2">🎹</div>
+                    <div class="font-semibold">Electronic</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center hover:glow transition cursor-pointer">
+                    <div class="text-2xl mb-2">🎺</div>
+                    <div class="font-semibold">Treble</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center hover:glow transition cursor-pointer">
+                    <div class="text-2xl mb-2">🥁</div>
+                    <div class="font-semibold">Bass</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center hover:glow transition cursor-pointer">
+                    <div class="text-2xl mb-2">🎼</div>
+                    <div class="font-semibold">Soft</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center hover:glow transition cursor-pointer">
+                    <div class="text-2xl mb-2">📊</div>
+                    <div class="font-semibold">Flat</div>
+                </div>
+                <div class="glass rounded-xl p-4 text-center hover:glow transition cursor-pointer">
+                    <div class="text-2xl mb-2">🎚️</div>
+                    <div class="font-semibold">Custom EQ</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="relative py-24 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl md:text-6xl font-bold mb-6">
+                Ready to Build Something <br/>
+                <span class="gradient-text">Amazing</span>?
+            </h2>
+            <p class="text-xl text-gray-400 mb-12">
+                Join developers building the next generation of Discord music bots
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="https://github.com/ryxu-xo/lava.ts" class="gradient-border px-8 py-4 rounded-xl font-semibold text-lg hover:glow transition duration-300 inline-block">
+                    View on GitHub
+                </a>
+                <a href="https://github.com/ryxu-xo/lava.ts/wiki" class="glass px-8 py-4 rounded-xl font-semibold text-lg hover:glow transition duration-300 inline-block">
+                    Read the Docs
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative border-t border-gray-800 py-12 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <svg class="w-6 h-6 text-indigo" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/>
+                        </svg>
+                        <span class="text-xl font-bold gradient-text">Lava.ts</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        Professional Lavalink v4 client for TypeScript and JavaScript
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="https://github.com/ryxu-xo/lava.ts/wiki" class="hover:text-white transition">Documentation</a></li>
+                        <li><a href="https://github.com/ryxu-xo/lava.ts" class="hover:text-white transition">GitHub Repository</a></li>
+                        <li><a href="https://github.com/ryxu-xo/lava.ts/issues" class="hover:text-white transition">Examples</a></li>
+                        <li><a href="https://github.com/ryxu-xo/lava.ts/wiki" class="hover:text-white transition">API Reference</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Community</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="https://discord.gg/your-invite" class="hover:text-white transition">Discord Server</a></li>
+                        <li><a href="https://github.com/ryxu-xo/lava.ts/issues" class="hover:text-white transition">Issue Tracker</a></li>
+                        <li><a href="https://github.com/ryxu-xo/lava.ts" class="hover:text-white transition">Contributing</a></li>
+                        <li><a href="https://github.com/ryxu-xo" class="hover:text-white transition">Discussions</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="https://github.com/ryxu-xo/lava.ts/blob/main/LICENSE" class="hover:text-white transition">MIT License</a></li>
+                        <li><a href="https://github.com/ryxu-xo" class="hover:text-white transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between">
+                <p class="text-gray-400 text-sm">
+                    © 2025 Lava.ts. Built with ❤️ by <a href="https://github.com/ryxu-xo" class="gradient-text hover:underline">ryxu-xo</a>
+                </p>
+                <div class="flex items-center space-x-4 mt-4 md:mt-0">
+                    <a href="https://github.com/ryxu-xo/lava.ts" class="text-gray-400 hover:text-white transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.npmjs.com/package/lava.ts" class="text-gray-400 hover:text-white transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M0 7.334v8h6.666v1.332H12v-1.332h12v-8H0zm6.666 6.664H5.334v-4H3.999v4H1.335V8.667h5.331v5.331zm4 0v1.336H8.001V8.667h5.334v5.332h-2.669v-.001zm12.001 0h-1.33v-4h-1.336v4h-1.335v-4h-1.33v4h-2.671V8.667h8.002v5.331zM10.665 10H12v2.667h-1.335V10z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function copyInstall() {
+            navigator.clipboard.writeText('npm install lava.ts');
+            const icon = document.getElementById('copy-icon');
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>';
+            setTimeout(() => {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>';
+            }, 2000);
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
