@@ -1,5 +1,5 @@
 {
-  "name": "lava-client",
+  "name": "lavacore",
   "version": "1.0.0",
   "description": "Professional-grade Lavalink v4 client library for Node.js with TypeScript-first design",
   "main": "dist/index.js",

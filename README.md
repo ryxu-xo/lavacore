@@ -1,9 +1,9 @@
-# lava-client
+# lavacore
 
 > A professional-grade, TypeScript-first Lavalink v4 client library for Node.js
 
-[![npm version](https://img.shields.io/npm/v/lava.ts.svg)](https://www.npmjs.com/package/lava.ts)
-[![License](https://img.shields.io/npm/l/lava.ts.svg)](LICENSE)
+[![npm version](https://img.shields.io/npm/v/lavacore.svg)](https://www.npmjs.com/package/lavacore)
+[![License](https://img.shields.io/npm/l/lavacore.svg)](LICENSE)
 
 ## Features
 
@@ -23,8 +23,8 @@
 - ▶️ **Full Playback Control** - Play, pause, resume, stop, seek
 - ⏭️ **Queue Management** - Add, remove, clear, shuffle queue
 - ⏮️ **Previous Track** - Play previous tracks (last 10 stored)
-- 🔀 **Shuffle** - Randomize queue order
-- 🔁 **Loop Modes** - Track loop, queue loop, or off
+- � **Shuffle** - Randomize queue order
+- �🔁 **Loop Modes** - Track loop, queue loop, or off
 - 📜 **Playback History** - Track last 50 played songs
 - ⭐ **Favorites/Bookmarks** - Save favorite tracks per user/guild
 - 💾 **Queue Persistence** - Save and restore queue state
@@ -46,13 +46,13 @@
 ## Installation
 
 ```bash
-npm install lava-client
+npm install lavacore
 ```
 
 ## Quick Start
 
 ```typescript
-import { Manager } from 'lava-client';
+import { Manager } from 'lavacore';
 import { Client } from 'discord.js';
 
 const client = new Client({ intents: ['Guilds', 'GuildVoiceStates'] });
@@ -130,7 +130,7 @@ player.setCrossfade(3000);   // 3 second crossfade
 player.setVolumeNormalization(true); // Enable normalization
 
 // Favorites
-import { FavoritesManager } from 'lava-client';
+import { FavoritesManager } from 'lavacore';
 const favorites = new FavoritesManager();
 favorites.addUserFavorite('userId', track);
 favorites.addGuildFavorite('guildId', track, 'userId');
@@ -146,7 +146,7 @@ const history = player.getHistory(); // Last 50 tracks
 player.clearHistory();
 
 // Metadata cache
-import { MetadataCache } from 'lava-client';
+import { MetadataCache } from 'lavacore';
 const cache = new MetadataCache(1000, 3600000); // 1000 items, 1 hour TTL
 const cachedTrack = cache.get('identifier');
 if (!cachedTrack) {
@@ -205,7 +205,7 @@ player.filters()
 
 ## AutoPlay Feature
 
-Lava.ts includes intelligent AutoPlay that automatically finds and plays related tracks when your queue ends:
+lavacore includes intelligent AutoPlay that automatically finds and plays related tracks when your queue ends:
 
 - **YouTube**: Uses YouTube's recommendation system (RD playlists)
 - **SoundCloud**: Searches for similar tracks by artist/title
@@ -222,10 +222,10 @@ const manager = new Manager({
 
 ## Plugin System
 
-Lava.ts supports custom plugins to extend functionality:
+lavacore supports custom plugins to extend functionality:
 
 ```typescript
-import { Manager, LavaPlugin } from 'lava-client';
+import { Manager, LavaPlugin } from 'lavacore';
 
 const myPlugin: LavaPlugin = {
   name: 'MyPlugin',
@@ -242,7 +242,7 @@ const myPlugin: LavaPlugin = {
 manager.use(myPlugin);
 ```
 
-Check out [lava-plugin-voice-status](./lava-plugin-voice-status) for a voice channel status plugin example.
+Check out [lava-plugin-voice-status](https://github.com/ryxu-xo/lava-voice-status) for a voice channel status plugin example.
 
 ## API Documentation
 
@@ -315,6 +315,6 @@ Contributions are welcome! Please read our contributing guidelines and code of c
 
 ## Support
 
-- [Documentation](https://github.com/ryxu-xo/lava.ts/wiki)
-- [Issues](https://github.com/ryxu-xo/lava.ts/issues)
+- [Documentation](https://github.com/ryxu-xo/lavacore/wiki)
+- [Issues](https://github.com/ryxu-xo/lavacore/issues)
 - [Discord Server](https://discord.gg/your-invite)
