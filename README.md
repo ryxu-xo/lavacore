@@ -1,9 +1,9 @@
-# lavawave
+# lavaflow
 
 > A professional-grade, TypeScript-first Lavalink v4 client library for Node.js
 
-[![npm version](https://img.shields.io/npm/v/lavawave.svg)](https://www.npmjs.com/package/lavawave)
-[![License](https://img.shields.io/npm/l/lavawave.svg)](LICENSE)
+[![npm version](https://img.shields.io/npm/v/lavaflow.svg)](https://www.npmjs.com/package/lavaflow)
+[![License](https://img.shields.io/npm/l/lavaflow.svg)](LICENSE)
 
 ## Features
 
@@ -46,13 +46,13 @@
 ## Installation
 
 ```bash
-npm install lavawave
+npm install lavaflow
 ```
 
 ## Quick Start
 
 ```typescript
-import { Manager } from 'lavawave';
+import { Manager } from 'lavaflow';
 import { Client } from 'discord.js';
 
 const client = new Client({ intents: ['Guilds', 'GuildVoiceStates'] });
@@ -130,7 +130,7 @@ player.setCrossfade(3000);   // 3 second crossfade
 player.setVolumeNormalization(true); // Enable normalization
 
 // Favorites
-import { FavoritesManager } from 'lavawave';
+import { FavoritesManager } from 'lavaflow';
 const favorites = new FavoritesManager();
 favorites.addUserFavorite('userId', track);
 favorites.addGuildFavorite('guildId', track, 'userId');
@@ -146,7 +146,7 @@ const history = player.getHistory(); // Last 50 tracks
 player.clearHistory();
 
 // Metadata cache
-import { MetadataCache } from 'lavawave';
+import { MetadataCache } from 'lavaflow';
 const cache = new MetadataCache(1000, 3600000); // 1000 items, 1 hour TTL
 const cachedTrack = cache.get('identifier');
 if (!cachedTrack) {
@@ -205,7 +205,7 @@ player.filters()
 
 ## AutoPlay Feature
 
-lavawave includes intelligent AutoPlay that automatically finds and plays related tracks when your queue ends:
+lavaflow includes intelligent AutoPlay that automatically finds and plays related tracks when your queue ends:
 
 - **YouTube**: Uses YouTube's recommendation system (RD playlists)
 - **SoundCloud**: Searches for similar tracks by artist/title
@@ -222,10 +222,10 @@ const manager = new Manager({
 
 ## Plugin System
 
-lavawave supports custom plugins to extend functionality:
+lavaflow supports custom plugins to extend functionality:
 
 ```typescript
-import { Manager, LavaPlugin } from 'lavawave';
+import { Manager, LavaPlugin } from 'lavaflow';
 
 const myPlugin: LavaPlugin = {
   name: 'MyPlugin',
@@ -315,6 +315,6 @@ Contributions are welcome! Please read our contributing guidelines and code of c
 
 ## Support
 
-- [Documentation](https://github.com/ryxu-xo/lavawave/wiki)
-- [Issues](https://github.com/ryxu-xo/lavawave/issues)
+- [Documentation](https://github.com/ryxu-xo/lavaflow/wiki)
+- [Issues](https://github.com/ryxu-xo/lavaflow/issues)
 - [Discord Server](https://discord.gg/your-invite)
