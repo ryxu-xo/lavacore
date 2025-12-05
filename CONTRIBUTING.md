@@ -1,13 +1,13 @@
-# Contributing to Lava.ts
+# Contributing to lavaflow
 
-Thank you for your interest in contributing to Lava.ts! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to lavaflow! This document provides guidelines and instructions for contributing.
 
 ## Development Setup
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/lava.ts.git
-   cd lava.ts
+   git clone https://github.com/ryxu-xo/lavaflow.git
+   cd lavaflow
    ```
 
 2. **Install dependencies**
@@ -28,7 +28,7 @@ Thank you for your interest in contributing to Lava.ts! This document provides g
 ## Project Structure
 
 ```
-lava.ts/
+lavaflow/
 ├── src/
 │   ├── index.ts                 # Main entry point
 │   ├── manager/
@@ -250,6 +250,6 @@ Found a bug? Help us fix it!
 
 ## License
 
-By contributing to Lava.ts, you agree that your contributions will be licensed under the MIT License.
+By contributing to lavaflow, you agree that your contributions will be licensed under the MIT License.
 
 Thank you for contributing! 🎵

@@ -1,13 +1,13 @@
-# Lava.ts - Project Overview
+# lavaflow - Project Overview
 
 ## 🎯 Project Summary
 
-**Lava.ts** is a professional-grade, TypeScript-first Lavalink v4 client library for Node.js. It provides a feature-rich, stable, and developer-friendly interface for integrating Lavalink audio streaming into Discord bots and other applications.
+**lavaflow** is a professional-grade, TypeScript-first Lavalink v4 client library for Node.js. It provides a feature-rich, stable, and developer-friendly interface for integrating Lavalink audio streaming into Discord bots and other applications.
 
 ## 📁 Complete Project Structure
 
 ```
-lava.ts/
+lavaflow/
 ├── src/
 │   ├── index.ts                      # Main entry point with all exports
 │   ├── manager/
@@ -281,12 +281,12 @@ const health = await manager.healthCheck();
 
 ### Installation
 ```bash
-npm install lava.ts
+npm install lavaflow
 ```
 
 ### Quick Start
 ```typescript
-import { Manager } from 'lava.ts';
+import { Manager } from 'lavaflow';
 import { Client } from 'discord.js';
 
 const client = new Client({ /* ... */ });

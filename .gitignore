@@ -1,3 +1,7 @@
+/*
+* lavaflow Git Ignore File
+*/
+
 # Ignore compiled output
 dist/
 build/

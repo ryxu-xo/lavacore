@@ -1,6 +1,6 @@
 # Installation & Setup Guide
 
-Complete guide for installing and setting up Lava.ts in your project.
+Complete guide for installing and setting up lavaflow in your project.
 
 ## Prerequisites
 
@@ -11,7 +11,7 @@ Complete guide for installing and setting up Lava.ts in your project.
 
 ## Installing Lavalink Server
 
-Before using Lava.ts, you need a Lavalink v4 server running.
+Before using lavaflow, you need a Lavalink v4 server running.
 
 ### Option 1: Docker (Recommended)
 
@@ -86,12 +86,12 @@ logging:
 java -jar Lavalink.jar
 ```
 
-## Installing Lava.ts
+## Installing lavaflow
 
 ### For Production
 
 ```bash
-npm install lava.ts
+npm install lavaflow
 ```
 
 ### For Development
@@ -99,8 +99,8 @@ npm install lava.ts
 1. **Clone the repository:**
 
 ```bash
-git clone https://github.com/yourusername/lava.ts.git
-cd lava.ts
+git clone https://github.com/ryxu-xo/lavaflow.git
+cd lavaflow
 ```
 
 2. **Install dependencies:**
@@ -124,7 +124,7 @@ npm link
 Then in your project:
 
 ```bash
-npm link lava.ts
+npm link lavaflow
 ```
 
 ## Project Setup
@@ -160,7 +160,7 @@ npm install discord.js
 
 ```typescript
 import { Client, GatewayIntentBits } from 'discord.js';
-import { Manager } from 'lava.ts';
+import { Manager } from 'lavaflow';
 
 const client = new Client({
   intents: [
