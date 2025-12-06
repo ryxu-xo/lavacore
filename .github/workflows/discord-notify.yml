@@ -77,7 +77,7 @@ jobs:
             ${{ github.event.pull_request.body }}
           embed-color: 16776960
           embed-url: ${{ github.event.pull_request.html_url }}
-          username: "Lava.ts GitHub Notifications"
+          username: "Lavaflow GitHub Notifications"
           avatar-url: "https://raw.githubusercontent.com/ryxu-xo/lava.ts/master/.github/assets/logo.png"
 
       - name: Send Release Notification
